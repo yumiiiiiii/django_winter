@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +22,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ex7iiy1k#n3te7!sn_mzfrzek-bs$+ht)v)9v$*os62ue&$uqc'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ex7iiy1k#n3te7!sn_mzfrzek-bs$+ht)v)9v$*os62ue&$') 
+# secret_key = django-insecure-ex7iiy1k#n3te7!sn_mzfrzek-bs$+ht)v)9v$*os62ue&$uqc 뒤에 uqc 지우면 안되나?? 오류나...
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', 1))  # TRUE
 
-ALLOWED_HOSTS = []
+if os.environ.get('DJANGO_ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+else:
+    ALLOWED_HOSTS = []
+
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -131,7 +139,7 @@ USE_TZ = False
 
 
 #image사용
-import os
+
 from pathlib import Path
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '_static') # 이게 없으니까 single_pages css 적용이 안된다.
